@@ -36,7 +36,7 @@ cursor = conn.cursor()
 number = 3
 #游标设置为字典类型
 cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-sql='update sys_user set user_state=0 where user_id=9'
+sql='update sys_user set user_state=0 where user_id=17'
 row_count = cursor.execute(sql)
 row_3 = cursor.fetchall()
 conn.commit()
