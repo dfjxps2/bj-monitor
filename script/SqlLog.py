@@ -88,15 +88,28 @@ def getLog():
 
 def getsqlLog():
     '''从接口拿到sql日志的json数据'''
-    log_json = json.loads(requests.get("http://localhost:8080/portal/druid/sql.json").text)
+    #配置接口ip端口
+    interface_ip = "localhost:8080"
+    #获取sql数据
+    log_json = json.loads(requests.get("http://"+interface_ip+"/portal/druid/sql.json").text)
+    #获取连接池数据
+    demo = "http://"+interface_ip+"/portal/druid/datasource.json"
+    pool_json = json.loads(requests.get("http://"+interface_ip+"/portal/druid/datasource.json").text)
+    #配置log格式
+    logger = confLog()
     #print log_json
     # situation 1 有sql日志
     if log_json['Content'] != None:
         for s in log_json['Content']:
-            print s['SQL']
-           #sendlog(['SQL'])
+            sql_time = s['LastTime']
+            sql_syntax = s['SQL']
+            sql_EffectedRowCountMax = str(s['EffectedRowCountMax'])
+            for s in pool_json['Content']:
+                pool_max = str(s['MaxActive'])
+                pool_current = str(s['InitialSize'])
+                logger.info("[%s]:[%s]:[%s]:[%s]:[%s]", sql_time,sql_syntax,pool_max,pool_current,sql_EffectedRowCountMax)
         # 收集完毕之后 清空sql日志 避免太臃肿的日志]
-        requests.get("http://localhost:8080/portal/druid/reset-all.json")
+        requests.get("http://"+interface_ip+"/portal/druid/reset-all.json")
     # situation 2 没sql日志 {"ResultCode":1,"Content":null}
     else:
         print("目前没日志")
