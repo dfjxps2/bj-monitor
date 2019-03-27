@@ -55,13 +55,13 @@ def user_monitor(username):
             print(0)
             return
 
-        sql = "SELECT A2.Task_Name,A1.Error_Level_Cd,A1.Tx_Date,A1.TaskRunTime,A2.DQID FROM M07_CHECKRESULT A1 INNER JOIN M07_CHECKLIST A2 ON A1.DQID = A2.DQID WHERE A1.Error_Level_Cd in (1,2,3,9) AND A2.Start_Dt <= A1.TaskRunTime  AND A2.End_Dt > A1.TaskRunTime "
-        #sql = "select a1.error_level_cd ,count(*) from m07_checkresult a1 inner join m07_checklist a2  on a1.dqid = a2.dqid where a1.error_level_cd in (1,2,3,9) and a2.start_dt <= a1.taskruntime  and a2.end_dt > a1.taskruntime"
+        #sql = "SELECT A2.Task_Name,A1.Error_Level_Cd,A1.Tx_Date,A1.TaskRunTime,A2.DQID FROM M07_CHECKRESULT A1 INNER JOIN M07_CHECKLIST A2 ON A1.DQID = A2.DQID WHERE A1.Error_Level_Cd in (1,2,3,9) AND A2.Start_Dt <= A1.TaskRunTime  AND A2.End_Dt > A1.TaskRunTime "
+        sql = "select a1.error_level_cd ,count(*) as num from m07_checkresult a1 inner join m07_checklist a2  on a1.dqid = a2.dqid where a1.error_level_cd in (1,2,3,9) and a2.start_dt <= a1.taskruntime  and a2.end_dt > a1.taskruntime"
         #系统前一天的时间
         sql+="  and a1.tx_date = (select date_sub(curdate(),interval 1 day))"
         #要查询的异常级别
         sql +=" and a1.error_level_cd = '{0}'".format(username)
-        sql +=" group by a1.error_level_cd"
+        #sql +=" group by a1.error_level_cd"
         row_count = cursor.execute(sql)
         row_3 = cursor.fetchall()
 
@@ -70,7 +70,7 @@ def user_monitor(username):
             print(0)
         else:
             for i in row_3:
-                print (i['error_level_cd'])
+                print (i['num'])
 
 
         conn.commit()
