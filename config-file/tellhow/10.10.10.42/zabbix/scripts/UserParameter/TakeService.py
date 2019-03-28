@@ -112,8 +112,11 @@ def service_num(sql):
 
 
 if __name__ == "__main__":
+    #服务类型，目前有三个类型的服务，ip，用户，部门 参数名称 monitor_ip  monitor_user  monitor_dep
     service_type = sys.argv[1]
+    #sql对应的传参变量
     parameter = sys.argv[2]
+    #是否查看订阅服务的数量，传递true为查看服务订阅数量，传递其他参数为查看服务订阅情况
     if_num = sys.argv[3]
     #service_type = 'monitor_ip'
     #parameter = '10.1.0.221'
@@ -128,6 +131,3 @@ if __name__ == "__main__":
         print len(num)
     else:
         user_monitor(sql)
-    #service_num = sys.argv[1]
-    #user_monitor(sys.argv[1])
-    #user_monitor('syslog')
